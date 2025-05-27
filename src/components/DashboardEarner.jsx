@@ -9,18 +9,21 @@ const dummyCredentials = [
     title: "Osnove Web Programiranja",
     description: "Uvod u HTML, CSS i JavaScript.",
     competencies: ["HTML", "CSS", "JavaScript"],
+    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
   },
   {
     id: 2,
     title: "Blockchain Osnove",
     description: "Razumevanje pametnih ugovora i EVM-a.",
     competencies: ["Smart Contracts", "Ethereum", "Solidity"],
+    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
   },
   {
     id: 3,
     title: "React za početnike",
     description: "Izrada SPA aplikacija koristeći React biblioteku.",
     competencies: ["React", "JSX", "Hooks"],
+    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
   },
 ];
 

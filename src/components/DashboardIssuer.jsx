@@ -1,66 +1,77 @@
 // src/components/DashboardIssuer.jsx
 import { useState, useEffect } from "react";
 import IssueNFT from "./IssueNFT";
-
-
+import { BrowserProvider, Contract } from "ethers";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
 
 const DashboardIssuer = ({ address }) => {
-const [currentView, setCurrentView] = useState("dashboard");
-const [selectedCredential, setSelectedCredential] = useState(null);
-const openIssueNFT = (credential) => {
-  setSelectedCredential(credential);
-  setCurrentView("issue");
-};
-const dummyRequests = [
-  {
-    id: 1,
-    credentialTitle: "Osnove Web Programiranja",
-    earnerAddress: "0xAbc123...7890",
-    competencies: ["HTML", "CSS", "JavaScript"],
-  },
-  {
-    id: 2,
-    credentialTitle: "Blockchain Osnove",
-    earnerAddress: "0xEf456...4321",
-    competencies: ["Smart Contracts", "Solidity"],
-  },
-];
+  const [currentView, setCurrentView] = useState("dashboard");
+  const [selectedCredential, setSelectedCredential] = useState(null);
   const [requests, setRequests] = useState([]);
   const [issued, setIssued] = useState([]);
 
+  const fetchRequests = async () => {
+    try {
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+      const ids = await contract.getRequestsByIssuer(address);
+      const reqs = await Promise.all(
+        ids.map(async (id) => {
+          const data = await contract.getRequest(id);
+          return {
+            id: id.toString(),
+            credentialTitle: data.naziv,
+            earnerAddress: data.earner,
+            competencies: data.ishodi.split(", "),
+            dodatneInfo: data.dodatneInfo,
+            institucija: data.institucija,
+            izvor: data.izvor,
+            datum: data.datum,
+            preduslovi: data.preduslovi,
+            trajanje: data.trajanje
+          };
+        })
+      );
+
+      setRequests(reqs.filter(r => r !== null));
+    } catch (err) {
+      console.error("Greška pri učitavanju zahteva:", err);
+    }
+  };
+
   useEffect(() => {
-    // Ovde bi došao poziv pametnom ugovoru da se učitaju zahtevi
-    setRequests(dummyRequests);
-  }, []);
+    fetchRequests();
+  }, [address]);
 
   const handleIssue = (reqId) => {
     const req = requests.find((r) => r.id === reqId);
     if (!req) return;
-
-    setIssued([...issued, req]);
-    setRequests(requests.filter((r) => r.id !== reqId));
+    setSelectedCredential(req);
     setCurrentView("issue");
-
   };
-  if (currentView === "issue" && requests) {
-  return (
-    <IssueNFT
-      credential={requests}
-      onBack={() => setCurrentView("home")}
-    />
-  );
-}
+
+  const handleBack = (refresh) => {
+    if (refresh && selectedCredential) {
+      setIssued(prev => [...prev, selectedCredential]);
+      setRequests(prev => prev.filter(r => r.id !== selectedCredential.id));
+    }
+    setCurrentView("dashboard");
+    setSelectedCredential(null);
+  };
+
+  if (currentView === "issue" && selectedCredential) {
+    return (
+      <IssueNFT
+        credential={selectedCredential}
+        onBack={handleBack}
+      />
+    );
+  }
 
   return (
     <div className="p-6">
-      {currentView === "issue" && (
-  <IssueNFT onIssueClick={openIssueNFT} />
-)}
-
-{currentView === "issue" && selectedCredential && (
-  <IssueNFT credential={selectedCredential} onBack={() => setCurrentView("dashboard")} />
-)}
-
       <h2 className="text-2xl font-bold mb-4">Dobrodošao, Issuer</h2>
       <p className="text-sm text-gray-600 mb-6">Wallet: {address}</p>
 
@@ -112,4 +123,3 @@ const dummyRequests = [
 };
 
 export default DashboardIssuer;
-

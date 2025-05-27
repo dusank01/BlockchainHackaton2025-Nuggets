@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x3b9bB0872dE330f293Ca79d6310f2035d385d7fb";
+export const CONTRACT_ADDRESS = "0xd71dBcF04086D2C4b0A3bdAeC1F6f1d10795Fbaf";
 
 export const CONTRACT_ABI = [
 	{
@@ -227,49 +227,9 @@ export const CONTRACT_ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "earner",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "naziv",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "institucija",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "izvor",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "datum",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "ishodi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "preduslovi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "dodatneInfo",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "trajanje",
-				"type": "string"
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
 			},
 			{
 				"internalType": "string",
@@ -277,7 +237,7 @@ export const CONTRACT_ABI = [
 				"type": "string"
 			}
 		],
-		"name": "issueCredential",
+		"name": "issueCredentialFromRequest",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -323,6 +283,59 @@ export const CONTRACT_ABI = [
 	{
 		"inputs": [],
 		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "naziv",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "institucija",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "izvor",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "datum",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "ishodi",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "preduslovi",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "dodatneInfo",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "trajanje",
+				"type": "string"
+			}
+		],
+		"name": "requestCredential",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -651,6 +664,101 @@ export const CONTRACT_ABI = [
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			}
+		],
+		"name": "getRequest",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "earner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "naziv",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "institucija",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "izvor",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "datum",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "ishodi",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "preduslovi",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "dodatneInfo",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "trajanje",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isIssued",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct MicroCredentialNFT.CredentialRequest",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			}
+		],
+		"name": "getRequestsByIssuer",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "owner",
 				"type": "address"
@@ -712,6 +820,112 @@ export const CONTRACT_ABI = [
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "requestCounter",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "requests",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "earner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "naziv",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "institucija",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "izvor",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "datum",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "ishodi",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "preduslovi",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "dodatneInfo",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "trajanje",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "isIssued",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "requestsByIssuer",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
