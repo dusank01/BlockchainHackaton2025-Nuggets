@@ -1,11 +1,22 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import { Contract, BrowserProvider } from "ethers";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
+
 
 const StudentCredentials = ({address}) => {
   const [credentials, setCredentials] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+   const handleShare = () => {
+    const shareUrl = `${window.location.origin}/dashboard/earner/${address}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
 
   const fetchCredentials = async () => {
     console.log("Korisnik:", address);
@@ -53,14 +64,14 @@ const data = {
     }
   };
 
+  useEffect(() => {
+  if (address) {
+    fetchCredentials();
+  }
+}, [address])
+
   return (
-    <div className="p-4">
-      <button
-        onClick={fetchCredentials}
-        className="mb-4 bg-blue-600 text-white px-4 py-2 rounded"
-      >
-        Prikaži moje mikrokredencijale
-      </button>
+    <div className="p-4">     
 
       {loading && <p>Učitavanje...</p>}
 
@@ -90,6 +101,12 @@ const data = {
               <p className="text-xs text-gray-500 mt-1">
                 Token ID: {c.tokenId}
               </p>
+              <button
+        onClick={handleShare}
+        className="mt-4 px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+      >
+        {copied ? "Kopirano! ✅" : "🔗 Podeli"}
+      </button>
             </div>
           ))}
         </div>

@@ -1,5 +1,6 @@
 // src/components/Navbar.jsx
 import { Link } from "react-router-dom";
+import WalletAddress from "./WalletAdress";
 
 const Navbar = ({ address, role }) => {
   return (
@@ -11,7 +12,7 @@ const Navbar = ({ address, role }) => {
       <div className="flex gap-6 items-center">
         {role === "earner" && (
           <>
-            <Link to="/dashboard/earner" className="hover:underline">
+            <Link to="/dashboard/earner/${address}" className="hover:underline">
               Moji mikrokredencijali
             </Link>
             <Link to="/available" className="hover:underline">
@@ -35,9 +36,7 @@ const Navbar = ({ address, role }) => {
         )}
 
         {address && (
-          <div className="text-sm text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
-            <div>👤 {address.slice(0, 6)}...{address.slice(-4)}</div>
-          </div>         
+          <WalletAddress address={address} />
         )}
       </div>
     </nav>
