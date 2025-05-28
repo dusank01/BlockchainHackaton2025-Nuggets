@@ -6,7 +6,7 @@ const Navbar = ({ address, role }) => {
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
       <Link to="/" className="text-xl font-bold text-blue-600">
-        Microcredential {role} app
+        Welcome {role} 
       </Link>
 
       <div className="flex gap-6 items-center">

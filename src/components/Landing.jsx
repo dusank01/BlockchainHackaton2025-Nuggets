@@ -30,7 +30,7 @@ const Landing = ({ onLogin }) => {
       <div className="flex flex-col-reverse md:flex-row items-center justify-between px-8 py-20 max-w-7xl mx-auto gap-12">
         <div className="md:w-1/2 text-center md:text-left">
           <h1 className="text-5xl font-extrabold text-blue-800 mb-6 leading-tight">
-            Microcredential Platforma
+            MicroCredentialChain
           </h1>
           <p className="text-lg text-gray-700 mb-6">
             Decentralizovano rešenje za izdavanje, proveru i prikaz mikrokredencijala uz pomoć blockchain tehnologije.
