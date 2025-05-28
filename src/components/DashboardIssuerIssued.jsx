@@ -58,17 +58,14 @@ const DashboardIssuerIssued = ({ address }) => {
             >
               <h4 className="text-lg font-semibold">{cred.credentialTitle}</h4>
               <p className="text-sm">Izdato studentu: {cred.earnerAddress}</p>
-              <p className="text-sm mt-2 font-medium">Kompetencije:</p>
-              <ul className="text-sm list-disc list-inside">
-                {cred.competencies.map((c, i) => (
-                  <li key={i}>{c}</li>
-                ))}
-              </ul>
-              <p className="text-xs mt-2 italic text-gray-500">Trajanje: {cred.trajanje}</p>
+              <br></br>
               <p className="text-xs text-gray-500">Institucija: {cred.institucija}</p>
+              <p className="text-xs text-gray-500">Izvor: {cred.izvor}</p>
               <p className="text-xs text-gray-500">Datum: {cred.datum}</p>
+              <p className="text-xs text-gray-500">Ishodi: {cred.competencies}</p>
               <p className="text-xs text-gray-500">Preduslovi: {cred.preduslovi}</p>
               <p className="text-xs text-gray-500">Dodatne informacije: {cred.dodatneInfo}</p>
+              <p className="text-xs text-gray-500">Trajanje: {cred.trajanje}</p>
             </div>
           ))}
         </div>
