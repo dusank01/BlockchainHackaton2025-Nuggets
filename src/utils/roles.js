@@ -3,7 +3,7 @@
 export const ISSUERS = [
    // zameni pravim adresama
   "",
-  "0x1574245569Df59717dDE498E6723C912Cb68d613"
+  ""
 ];
 
 export const isIssuer = (address) => {

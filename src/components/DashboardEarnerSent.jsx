@@ -3,7 +3,9 @@ import { useState } from "react";
 import MicroCredentialCard from "./MicroCredentialCard";
 import StudentCredentials from "./StudentCredential";
 
-const dummyCredentials = [
+
+const DashboardEarnerSent = ({ address }) => {
+    const dummyCredentials = [
   {
     id: 1,
     title: "Osnove Web Programiranja",
@@ -27,7 +29,6 @@ const dummyCredentials = [
   },
 ];
 
-const DashboardEarner = ({ address }) => {
   const [requests, setRequests] = useState([]);
 
   const handleRequest = (credentialId) => {
@@ -42,25 +43,7 @@ const DashboardEarner = ({ address }) => {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Dobrodošao, Earner</h2>
-      <p className="text-sm text-gray-600 mb-6">Wallet: {address}</p>
-      <StudentCredentials address={address} />
-      
-
-
-      <h3 className="text-xl mb-2">Dostupni mikrokredencijali</h3>
-      <div className="flex flex-wrap gap-4">
-        {dummyCredentials.map((credential) => (
-          <MicroCredentialCard
-            key={credential.id}
-            credential={credential}
-            onRequest={handleRequest}
-          />
-        ))}
-      </div>
-
-      <div className="mt-10">
+         <div className="mt-10">
         <h3 className="text-xl mb-2">Poslati zahtevi</h3>
         <ul className="list-disc list-inside text-sm">
           {requests.length === 0 ? (
@@ -73,9 +56,8 @@ const DashboardEarner = ({ address }) => {
           )}
         </ul>
       </div>
-    </div>
   );
 };
 
-export default DashboardEarner;
+export default DashboardEarnerSent;
 
