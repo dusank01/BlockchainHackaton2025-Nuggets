@@ -20,13 +20,14 @@ const MicroCredentialCard = ({ credential }) => {
       const tx = await contract.requestCredential(
         issuerAddress,
         credential.title,
-        credential.institution || "Fakultet",
-        "formalan",
+        credential.institution,
+        credential.source,
         datum,
-        credential.competencies.join(", "),
-        "",
+        credential.competencies,
+        credential.preconditions,
         credential.description,
-        credential.duration || "1 mesec"
+        credential.duration,
+        credential.tokenURI
       );
 
       await tx.wait();
@@ -40,12 +41,14 @@ const MicroCredentialCard = ({ credential }) => {
   return (
     <div className="border rounded-xl shadow-md p-4 w-full md:w-[300px]">
       <h3 className="text-lg font-semibold">{credential.title}</h3>
-      <p className="text-sm mt-2">{credential.description}</p>
-      <ul className="mt-2 text-xs list-disc list-inside">
-        {credential.competencies.map((comp, idx) => (
-          <li key={idx}>{comp}</li>
-        ))}
-      </ul>
+<br></br>
+            <p className="text-xs text-gray-500"><strong>Institucija:</strong> {credential.institution}</p>
+              <p className="text-xs text-gray-500"><strong>Izvor:</strong> {credential.source}</p>
+              <p className="text-xs text-gray-500"><strong>Datum: </strong>{credential.datum}</p>
+              <p className="text-xs text-gray-500"><strong>Ishodi: </strong>{credential.competencies}</p>
+              <p className="text-xs text-gray-500"><strong>Preduslovi:</strong> {credential.preconditions}</p>
+              <p className="text-xs text-gray-500"><strong>Dodatne informacije:</strong> {credential.description}</p>
+              <p className="text-xs text-gray-500"><strong>Trajanje:</strong> {credential.duration}</p>
       <button
         className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
         onClick={handleRequest}

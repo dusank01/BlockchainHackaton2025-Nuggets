@@ -2,6 +2,17 @@ import { useState } from "react";
 import { Contract, BrowserProvider } from "ethers";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
 
+const fetchImageFromTokenURI = async (uri) => {
+  try {
+    const res = await fetch(uri);
+    const metadata = await res.json();
+    return metadata.image || null;
+  } catch (err) {
+    console.error("Greška pri čitanju tokenURI metapodataka:", err);
+    return null;
+  }
+};
+
 const StudentCredentials = ({address}) => {
   const [credentials, setCredentials] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,27 +33,32 @@ if (!address) {
       const tokenIds = await contract.getCredentialsByOwner(address);
 
       const allCredentials = await Promise.all(
-        tokenIds.map(async (id) => {
-          const tokenId = id.toString();
-          const res = await contract.getCredential(tokenId);
-const data = {
-  naziv: res[0],
-  institucija: res[1],
-  izvor: res[2],
-  datum: res[3],
-  ishodi: res[4],
-  preduslovi: res[5],
-  dodatneInfo: res[6],
-  trajanje: res[7],
-};
-          const uri = await contract.tokenURI(tokenId);
-          return {
-            tokenId,
-            uri,
-            ...data,
-          };
-        })
-      );
+  tokenIds.map(async (id) => {
+    const tokenId = id.toString();
+    const res = await contract.getCredential(tokenId);
+    const uri = await contract.tokenURI(tokenId);
+    const imageUrl = await fetchImageFromTokenURI(uri); // 🆕
+
+    const data = {
+      naziv: res[0],
+      institucija: res[1],
+      izvor: res[2],
+      datum: res[3],
+      ishodi: res[4],
+      preduslovi: res[5],
+      dodatneInfo: res[6],
+      trajanje: res[7],
+    };
+
+    return {
+      tokenId,
+      uri,
+      imageUrl, // 🆕 dodato u objekat
+      ...data,
+    };
+  })
+);
+
 
       setCredentials(allCredentials);
       setVisible(true);
@@ -90,6 +106,20 @@ const data = {
               <p className="text-xs text-gray-500 mt-1">
                 Token ID: {c.tokenId}
               </p>
+              {c.imageUrl && (
+  <img
+  src={c.imageUrl}
+  alt={`Slika za NFT ${c.tokenId}`} 
+  style={{
+    width: "200px",
+    height: "auto",
+    borderRadius: "8px",
+    display: "block",
+    margin: "0 auto"
+  }}
+/>
+)}
+
             </div>
           ))}
         </div>

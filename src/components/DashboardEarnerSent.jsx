@@ -39,14 +39,14 @@ const DashboardEarnerSent = ({ address }) => {
 
   return (
     <div className="mt-10">
-      <h3 className="text-xl mb-2">Poslati zahtevi (na čekanju)</h3>
+      <h3 className="text-xl mb-2">Poslati zahtevi na čekanju</h3>
       <ul className="list-disc list-inside text-sm">
         {pendingRequests.length === 0 ? (
           <li>Nemate zahteva koji su još uvek na čekanju.</li>
         ) : (
           pendingRequests.map((req) => (
             <li key={req.id}>
-              {req.naziv} (institucija: {req.institucija}, datum: {req.datum})
+              {req.naziv}
             </li>
           ))
         )}

@@ -26,13 +26,14 @@ const DashboardIssuerPending = ({ address }) => {
             id: id.toString(),
             credentialTitle: data.naziv,
             earnerAddress: data.earner,
-            competencies: data.ishodi.split(", "),
+            competencies: data.ishodi,
             dodatneInfo: data.dodatneInfo,
             institucija: data.institucija,
             izvor: data.izvor,
             datum: data.datum,
             preduslovi: data.preduslovi,
-            trajanje: data.trajanje
+            trajanje: data.trajanje,
+            tokenURI: data.tokenURI
           };
         })
       );
@@ -87,12 +88,18 @@ const DashboardIssuerPending = ({ address }) => {
             >
               <h4 className="text-lg font-semibold">{req.credentialTitle}</h4>
               <p className="text-sm">Student: {req.earnerAddress}</p>
-              <p className="text-sm mt-2 font-medium">Kompetencije:</p>
-              <ul className="text-sm list-disc list-inside">
-                {req.competencies.map((c, i) => (
-                  <li key={i}>{c}</li>
-                ))}
-              </ul>
+              <p className="text-sm mt-2 font-medium">Institucija:</p>
+              <p className="text-sm">{req.institucija}</p>
+              <p className="text-sm mt-2 font-medium">Izvor:</p>
+              <p className="text-sm">{req.izvor}</p>
+              <p className="text-sm mt-2 font-medium">Ishodi:</p>
+              <p className="text-sm">{req.competencies}</p>
+              <p className="text-sm mt-2 font-medium">Preduslovi:</p>
+              <p className="text-sm">{req.preduslovi}</p>
+              <p className="text-sm mt-2 font-medium">Dodatne informacije:</p>
+              <p className="text-sm">{req.dodatneInfo}</p>
+              <p className="text-sm mt-2 font-medium">Trajanje:</p>
+              <p className="text-sm">{req.trajanje}</p>
               <button
                 className="mt-4 bg-green-600 text-white px-4 py-2 rounded-lg"
                 onClick={() => handleIssue(req.id)}

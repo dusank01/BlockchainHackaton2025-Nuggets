@@ -27,11 +27,11 @@ const IssueNFT = ({ credential, onBack }) => {
         institucija: credential.institucija || "",
         izvor: credential.izvor || "",
         datum: credential.datum || "",
-        ishodi: (credential.competencies || []).join(", ") || "",
-        preduslovi: credential.dodatneInfo || "",
-        dodatneInfo: "",
+        ishodi: credential.competencies || "",
+        preduslovi:credential.preduslovi || "",
+        dodatneInfo: credential.dodatneInfo || "",
         trajanje: credential.trajanje || "",
-        tokenURI: ""
+        tokenURI: credential.tokenURI || ""
       });
     }
   }, [credential]);
@@ -50,8 +50,7 @@ const IssueNFT = ({ credential, onBack }) => {
       const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
       const tx = await contract.issueCredentialFromRequest(
-        requestId,
-        form.tokenURI
+        requestId
       );
 
       setStatus("⏳ Čekam potvrdu...");
@@ -89,7 +88,7 @@ const IssueNFT = ({ credential, onBack }) => {
               onChange={handleChange}
               placeholder={`Unesi ${key}`}
               className="mt-1 w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              readOnly={!(key === "tokenURI" || key === "dodatneInfo")}
+              readOnly={!(key === "dodatneInfo")}
             />
           </div>
         ))}
