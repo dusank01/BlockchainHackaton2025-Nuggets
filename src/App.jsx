@@ -39,7 +39,7 @@ function App() {
       <Navbar address={user.address} role={user.role} />
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/dashboard/earner/:address" element={<StudentCredentials address={user.address} />} />
+        <Route path="/dashboard/earner" element={<StudentCredentials address={user.address} />} />
         <Route path="/pending" element={<DashboardIssuerPending address={user.address} />} />
         <Route path="/available" element={<DashboardEarnerAvailable address={user.address} />} />
         <Route path="/issued" element={<DashboardIssuerIssued address={user.address} />} />

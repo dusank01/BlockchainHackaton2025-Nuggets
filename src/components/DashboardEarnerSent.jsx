@@ -1,63 +1,58 @@
-// src/components/DashboardEarner.jsx
-import { useState } from "react";
-import MicroCredentialCard from "./MicroCredentialCard";
-import StudentCredentials from "./StudentCredential";
-
+import { useState, useEffect } from "react";
+import { BrowserProvider, Contract } from "ethers";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
 
 const DashboardEarnerSent = ({ address }) => {
-    const dummyCredentials = [
-  {
-    id: 1,
-    title: "Osnove Web Programiranja",
-    description: "Uvod u HTML, CSS i JavaScript.",
-    competencies: ["HTML", "CSS", "JavaScript"],
-    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
-  },
-  {
-    id: 2,
-    title: "Blockchain Osnove",
-    description: "Razumevanje pametnih ugovora i EVM-a.",
-    competencies: ["Smart Contracts", "Ethereum", "Solidity"],
-    issuer: "0x1574245569Df59717dDE498E6723C912Cb68d613"
-  },
-  {
-    id: 3,
-    title: "React za početnike",
-    description: "Izrada SPA aplikacija koristeći React biblioteku.",
-    competencies: ["React", "JSX", "Hooks"],
-    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
-  },
-];
+  const [pendingRequests, setPendingRequests] = useState([]);
 
-  const [requests, setRequests] = useState([]);
+  const fetchPendingRequests = async () => {
+    try {
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-  const handleRequest = (credentialId) => {
-    if (requests.includes(credentialId)) {
-      alert("Već ste poslali zahtev za ovaj mikrokredencijal.");
-      return;
+      const totalRequests = await contract.requestCounter();
+      const requests = [];
+
+      for (let i = 0; i < totalRequests; i++) {
+        const req = await contract.getRequest(i);
+        if (req.earner.toLowerCase() === address.toLowerCase() && !req.isIssued) {
+          requests.push({
+            id: i.toString(),
+            naziv: req.naziv,
+            institucija: req.institucija,
+            datum: req.datum,
+            issuer: req.issuer,
+          });
+        }
+      }
+
+      setPendingRequests(requests);
+    } catch (err) {
+      console.error("Greška prilikom učitavanja zahteva:", err);
     }
-
-    setRequests([...requests, credentialId]);
-    alert("Zahtev uspešno poslat!");
-    // Ovde kasnije dodaj poziv ka pametnom ugovoru
   };
 
+  useEffect(() => {
+    fetchPendingRequests();
+  }, [address]);
+
   return (
-         <div className="mt-10">
-        <h3 className="text-xl mb-2">Poslati zahtevi</h3>
-        <ul className="list-disc list-inside text-sm">
-          {requests.length === 0 ? (
-            <li>Nema još poslatih zahteva.</li>
-          ) : (
-            requests.map((id) => {
-              const cred = dummyCredentials.find((c) => c.id === id);
-              return <li key={id}>{cred.title}</li>;
-            })
-          )}
-        </ul>
-      </div>
+    <div className="mt-10">
+      <h3 className="text-xl mb-2">Poslati zahtevi (na čekanju)</h3>
+      <ul className="list-disc list-inside text-sm">
+        {pendingRequests.length === 0 ? (
+          <li>Nemate zahteva koji su još uvek na čekanju.</li>
+        ) : (
+          pendingRequests.map((req) => (
+            <li key={req.id}>
+              {req.naziv} (institucija: {req.institucija}, datum: {req.datum})
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
   );
 };
 
 export default DashboardEarnerSent;
-

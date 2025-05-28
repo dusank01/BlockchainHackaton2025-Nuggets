@@ -1,29 +1,27 @@
-// src/components/DashboardIssuer.jsx
+// src/components/DashboardIssuerIssued.jsx
 import { useState, useEffect } from "react";
-import IssueNFT from "./IssueNFT";
 import { BrowserProvider, Contract } from "ethers";
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
 
 const DashboardIssuerIssued = ({ address }) => {
-  const [currentView, setCurrentView] = useState("dashboard");
-  const [selectedCredential, setSelectedCredential] = useState(null);
-  const [requests, setRequests] = useState([]);
-  const [issued, setIssued] = useState([]);
+  const [issuedCredentials, setIssuedCredentials] = useState([]);
 
-  const fetchRequests = async () => {
+  const fetchIssued = async () => {
     try {
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-      const ids = await contract.getRequestsByIssuer(address);
-      const reqs = await Promise.all(
-        ids.map(async (id) => {
-          const data = await contract.getRequest(id);
+      const tokenIds = await contract.getCredentialsByIssuer(address);
+      const credentials = await Promise.all(
+        tokenIds.map(async (tokenId) => {
+          const data = await contract.getCredential(tokenId);
+          const owner = await contract.ownerOf(tokenId);
+
           return {
-            id: id.toString(),
+            id: tokenId.toString(),
+            earnerAddress: owner,
             credentialTitle: data.naziv,
-            earnerAddress: data.earner,
             competencies: data.ishodi.split(", "),
             dodatneInfo: data.dodatneInfo,
             institucija: data.institucija,
@@ -35,58 +33,46 @@ const DashboardIssuerIssued = ({ address }) => {
         })
       );
 
-      setRequests(reqs.filter(r => r !== null));
+      setIssuedCredentials(credentials);
     } catch (err) {
-      console.error("Greška pri učitavanju zahteva:", err);
+      console.error("Greška pri učitavanju izdatih mikrokredencijala:", err);
     }
   };
 
   useEffect(() => {
-    fetchRequests();
+    fetchIssued();
   }, [address]);
-
-  const handleIssue = (reqId) => {
-    const req = requests.find((r) => r.id === reqId);
-    if (!req) return;
-    setSelectedCredential(req);
-    setCurrentView("issue");
-  };
-
-  const handleBack = (refresh) => {
-    if (refresh && selectedCredential) {
-      setIssued(prev => [...prev, selectedCredential]);
-      setRequests(prev => prev.filter(r => r.id !== selectedCredential.id));
-    }
-    setCurrentView("dashboard");
-    setSelectedCredential(null);
-  };
-
-  if (currentView === "issue" && selectedCredential) {
-    return (
-      <IssueNFT
-        credential={selectedCredential}
-        onBack={handleBack}
-      />
-    );
-  }
 
   return (
     <div className="p-6">
+      <h3 className="text-xl mb-4">Izdate mikrokredencijale</h3>
 
-      <div className="mt-10">
-        <h3 className="text-xl mb-2">Izdate mikrokredencijale</h3>
-        <ul className="list-disc list-inside text-sm">
-          {issued.length === 0 ? (
-            <li>Još uvek niste izdali nijedan mikrokredencijal.</li>
-          ) : (
-            issued.map((req) => (
-              <li key={req.id}>
-                {req.credentialTitle} → {req.earnerAddress}
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+      {issuedCredentials.length === 0 ? (
+        <p className="text-gray-500">Još uvek niste izdali nijedan mikrokredencijal.</p>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {issuedCredentials.map((cred) => (
+            <div
+              key={cred.id}
+              className="border p-4 rounded-xl shadow-sm bg-white"
+            >
+              <h4 className="text-lg font-semibold">{cred.credentialTitle}</h4>
+              <p className="text-sm">Izdato studentu: {cred.earnerAddress}</p>
+              <p className="text-sm mt-2 font-medium">Kompetencije:</p>
+              <ul className="text-sm list-disc list-inside">
+                {cred.competencies.map((c, i) => (
+                  <li key={i}>{c}</li>
+                ))}
+              </ul>
+              <p className="text-xs mt-2 italic text-gray-500">Trajanje: {cred.trajanje}</p>
+              <p className="text-xs text-gray-500">Institucija: {cred.institucija}</p>
+              <p className="text-xs text-gray-500">Datum: {cred.datum}</p>
+              <p className="text-xs text-gray-500">Preduslovi: {cred.preduslovi}</p>
+              <p className="text-xs text-gray-500">Dodatne informacije: {cred.dodatneInfo}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

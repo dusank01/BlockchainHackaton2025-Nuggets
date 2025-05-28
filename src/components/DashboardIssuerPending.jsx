@@ -1,4 +1,4 @@
-// src/components/DashboardIssuer.jsx
+// src/components/DashboardIssuerPending.jsx
 import { useState, useEffect } from "react";
 import IssueNFT from "./IssueNFT";
 import { BrowserProvider, Contract } from "ethers";
@@ -20,6 +20,8 @@ const DashboardIssuerPending = ({ address }) => {
       const reqs = await Promise.all(
         ids.map(async (id) => {
           const data = await contract.getRequest(id);
+          if (data.isIssued) return null; // ⚠️ filtriraj izdato odmah ovde
+
           return {
             id: id.toString(),
             credentialTitle: data.naziv,
@@ -35,6 +37,7 @@ const DashboardIssuerPending = ({ address }) => {
         })
       );
 
+      // ukloni sve koji su null (izdati)
       setRequests(reqs.filter(r => r !== null));
     } catch (err) {
       console.error("Greška pri učitavanju zahteva:", err);
@@ -72,7 +75,6 @@ const DashboardIssuerPending = ({ address }) => {
 
   return (
     <div className="p-6">
-
       <h3 className="text-xl mb-2">Zahtevi za mikrokredencijale</h3>
       {requests.length === 0 ? (
         <p className="text-gray-500">Nema trenutno zahteva.</p>
