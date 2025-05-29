@@ -14,7 +14,7 @@ preconditions:"Položena 4 domaća zadatka, pismeni ispit i odbranjen projekat",
 description: "Uvod u HTML, CSS i JavaScript.",
 duration:"5 godina",
 tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreibpabo4jbhsdcdkbz37ijdske54lv7ivhvpuzfozi76urwom3g6qm",
-issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
+issuer: "0x1574245569df59717dde498e6723c912cb68d613"
   },
   {
     id: 2,
