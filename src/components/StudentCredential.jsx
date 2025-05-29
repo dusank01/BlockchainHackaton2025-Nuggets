@@ -155,7 +155,7 @@ if (!address) {
   <div className="mt-6 flex justify-start">
     <button
       onClick={() => {
-        navigator.clipboard.writeText(window.location.href);
+        navigator.clipboard.writeText(c.uri);
         alert("Link kopiran!");
       }}
       className="text-xs text-gray-500 hover:text-gray-800 underline"

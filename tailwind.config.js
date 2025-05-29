@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+          backgroundImage: {
+        'hero-bg': "url('../public/backgrounds/Background3.png')",
+      }
+    },
   },
   plugins: [],
 };

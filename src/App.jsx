@@ -36,10 +36,17 @@ function App() {
 
   return (
     
+
+    <div className="relative min-h-screen">
+      
+    <div className="absolute inset-0 bg-hero-bg bg-cover bg-center opacity-50 z-0" />
+
+      
+      <div className="relative z-10">
     <Router>
       <Navbar address={user.address} role={user.role} />
       <Routes>
-        <Route path="/" element={<LoggedIn/>}/>
+        <Route path="/" element={<LoggedIn/>} />
         <Route path="/dashboard/earner/:adress" element={<StudentCredentials address={user.address} />} />
         <Route path="/pending" element={<DashboardIssuerPending address={user.address} />} />
         <Route path="/available" element={<DashboardEarnerAvailable address={user.address} />} />
@@ -47,7 +54,8 @@ function App() {
         <Route path="/sent" element={<DashboardEarnerSent address={user.address}/>}/>
       </Routes>
     </Router>
-
+      </div>
+    </div>
   );
 }
 
