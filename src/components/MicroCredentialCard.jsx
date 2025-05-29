@@ -4,6 +4,12 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
 
 const MicroCredentialCard = ({ credential }) => {
   const [status, setStatus] = useState("");
+  const [expanded, setExpanded] = useState(false);
+  const toggleExpand = () => {
+    setExpanded((prev) => !prev);
+  };
+
+
 
   const handleRequest = async () => {
     try {
@@ -39,22 +45,41 @@ const MicroCredentialCard = ({ credential }) => {
   };
 
   return (
-    <div className="border rounded-xl shadow-md p-4 w-full md:w-[300px]">
-      <h3 className="text-lg font-semibold">{credential.title}</h3>
-<br></br>
-            <p className="text-xs text-gray-500"><strong>Institucija:</strong> {credential.institution}</p>
-              <p className="text-xs text-gray-500"><strong>Izvor:</strong> {credential.source}</p>
-              <p className="text-xs text-gray-500"><strong>Datum: </strong>{credential.datum}</p>
-              <p className="text-xs text-gray-500"><strong>Ishodi: </strong>{credential.competencies}</p>
-              <p className="text-xs text-gray-500"><strong>Preduslovi:</strong> {credential.preconditions}</p>
-              <p className="text-xs text-gray-500"><strong>Dodatne informacije:</strong> {credential.description}</p>
-              <p className="text-xs text-gray-500"><strong>Trajanje:</strong> {credential.duration}</p>
-      <button
-        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg"
-        onClick={handleRequest}
-      >
-        Pošalji zahtev
-      </button>
+    <div className="border rounded-xl shadow-md p-4 w-full md:w-[300px] flex flex-col justify-between">
+      <div>
+        <h3 className="text-lg font-semibold">{credential.title}</h3>
+        <p className="text-xs text-gray-500"><strong>Institucija:</strong> {credential.institution}</p>
+        <p className="text-xs text-gray-500"><strong>Trajanje:</strong> {credential.duration}</p>
+
+        {expanded && (
+          <>
+            <p className="text-xs text-gray-500"><strong>Izvor:</strong> {credential.source}</p>
+            <p className="text-xs text-gray-500"><strong>Datum:</strong> {credential.datum}</p>
+            <p className="text-xs text-gray-500"><strong>Ishodi:</strong> {credential.competencies}</p>
+            <p className="text-xs text-gray-500"><strong>Preduslovi:</strong> {credential.preconditions}</p>
+            <p className="text-xs text-gray-500"><strong>Dodatne informacije:</strong> {credential.description}</p>
+          </>
+        )}
+
+        {/* Dugme za prikaz dodatnih informacija */}
+        <button
+          onClick={toggleExpand}
+          className="mt-3 text-sm text-blue-600 underline hover:text-blue-800"
+        >
+          {expanded ? "Prikaži manje" : "Prikaži više"}
+        </button>
+      </div>
+
+      {/* Donji deo kartice sa desno poravnanim dugmetom */}
+      <div className="flex justify-end items-end mt-6">
+        <button
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+          onClick={handleRequest}
+        >
+          Pošalji zahtev
+        </button>
+      </div>
+
       {status && (
         <p className="text-sm text-gray-600 mt-2 italic">{status}</p>
       )}

@@ -5,6 +5,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
 
 const DashboardIssuerIssued = ({ address }) => {
   const [issuedCredentials, setIssuedCredentials] = useState([]);
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   const fetchIssued = async () => {
     try {
@@ -43,15 +44,19 @@ const DashboardIssuerIssued = ({ address }) => {
     fetchIssued();
   }, [address]);
 
+  const toggleExpand = (index) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
   return (
     <div className="p-6">
-      <h3 className="text-xl mb-4">Izdate mikrokredencijale</h3>
+      <h3 className="text-xl mb-4 font-semibold text-blue-700">Izdati mikrokredencijali</h3>
 
       {issuedCredentials.length === 0 ? (
         <p className="text-gray-500">Još uvek niste izdali nijedan mikrokredencijal.</p>
       ) : (
         <div className="flex flex-col gap-4">
-          {issuedCredentials.map((cred) => (
+          {issuedCredentials.map((cred,index) => (
             <div
               key={cred.id}
               className="border p-4 rounded-xl shadow-sm bg-white"
@@ -59,13 +64,29 @@ const DashboardIssuerIssued = ({ address }) => {
               <h4 className="text-lg font-semibold">{cred.credentialTitle}</h4>
               <p className="text-sm">Izdato studentu: {cred.earnerAddress}</p>
               <br></br>
+              <p className="text-xs text-gray-500">Datum: {cred.datum}</p>
+              {expandedIndex === index && (
+                <>
               <p className="text-xs text-gray-500">Institucija: {cred.institucija}</p>
               <p className="text-xs text-gray-500">Izvor: {cred.izvor}</p>
-              <p className="text-xs text-gray-500">Datum: {cred.datum}</p>
               <p className="text-xs text-gray-500">Ishodi: {cred.competencies}</p>
               <p className="text-xs text-gray-500">Preduslovi: {cred.preduslovi}</p>
               <p className="text-xs text-gray-500">Dodatne informacije: {cred.dodatneInfo}</p>
               <p className="text-xs text-gray-500">Trajanje: {cred.trajanje}</p>
+
+                  <p className="text-sm text-blue-700 mt-2">
+                    <strong>Token URI:</strong>{" "}
+                    <a href={cred.uri} target="_blank" rel="noreferrer">{cred.uri}</a>
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Token ID: {cred.tokenId}</p>
+                </>
+              )}
+                <button
+                onClick={() => toggleExpand(index)}
+                className="mt-3 text-sm text-blue-600 underline hover:text-blue-800"
+              >
+                {expandedIndex === index ? "Prikaži manje" : "Prikaži više"}
+              </button>
             </div>
           ))}
         </div>

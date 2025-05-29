@@ -28,7 +28,7 @@ issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
     duration: "1 semestar",
     
 tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreifwdkpy3dubmts6zknfl3eqv3524e5hdwcm7qmmlooxdhkux2xfeq",
-    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
+    issuer: "0x1574245569df59717dde498e6723c912cb68d613"
   },
   {
     id: 3,
@@ -88,18 +88,31 @@ tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreigbzqzjdheoiu5od3mpus6gzv2nuhu
 
 const DashboardEarnerAvailable = ({ address }) => {
   const [requests, setRequests] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRequest = (credentialId) => {
     if (requests.includes(credentialId)) {
-      alert("Već ste poslali zahtev za ovaj mikrokredencijal.");
+      setModalMessage("⚠ Već ste poslali zahtev za ovaj mikrokredencijal.");
+      setIsLoading(false);
+      setShowModal(true);
+      setTimeout(() => setShowModal(false), 2000);
       return;
     }
 
     setRequests([...requests, credentialId]);
-    alert("Zahtev uspešno poslat!");
-    // Ovde kasnije dodaj poziv ka pametnom ugovoru
-  };
+    setModalMessage("🔄 Slanje zahteva...");
+    setIsLoading(true);
+    setShowModal(true);
 
+   
+    setTimeout(() => {
+      setModalMessage("✅ Zahtev uspešno poslat!");
+      setIsLoading(false);
+      setTimeout(() => setShowModal(false), 2000);
+    }, 2000);
+  };
 
   return (
     <div className="p-6">
@@ -114,9 +127,18 @@ const DashboardEarnerAvailable = ({ address }) => {
         ))}
       </div>
 
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center transform transition duration-300">
+            <p className="text-lg font-medium mb-4">{modalMessage}</p>
+            {isLoading && (
+              <div className="h-6 w-6 bg-blue-500 rounded-full animate-pulse mx-auto" />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default DashboardEarnerAvailable;
-
