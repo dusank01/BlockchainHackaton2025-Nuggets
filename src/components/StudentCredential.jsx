@@ -108,7 +108,8 @@ if (!address) {
 >
   <div className="flex flex-col md:flex-row gap-4">
     
-    <div className="flex-1">
+    <div className="flex-1" style={{maxWidth:"70%"
+    }}>
       <h3 className="text-lg font-semibold mb-2">{c.naziv}</h3>
       <p><strong>Institucija:</strong> {c.institucija}</p>
       <p><strong>Datum:</strong> {c.datum}</p>
@@ -141,7 +142,7 @@ if (!address) {
 
     
     {c.imageUrl && (
-      <div className="md:w-48 flex-shrink-0 mx-auto md:mx-0">
+      <div className="md:w-40 flex-shrink-0 mx-auto md:mx-0">
         <img
           src={c.imageUrl}
           alt={`Slika za NFT ${c.tokenId}`}

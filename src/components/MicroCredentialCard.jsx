@@ -45,8 +45,8 @@ const MicroCredentialCard = ({ credential }) => {
   };
 
   return (
-    <div className="border rounded-xl shadow-md p-4 w-full md:w-[300px] flex flex-col justify-between">
-      <div>
+    <div className="border rounded-xl shadow-md p-4 w-full md:w-[300px] flex flex-col justify-between" style={{backgroundColor: "white"}}>
+      <div >
         <h3 className="text-lg font-semibold">{credential.title}</h3>
         <p className="text-xs text-gray-500"><strong>Institucija:</strong> {credential.institution}</p>
         <p className="text-xs text-gray-500"><strong>Trajanje:</strong> {credential.duration}</p>

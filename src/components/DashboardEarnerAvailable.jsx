@@ -116,7 +116,7 @@ const DashboardEarnerAvailable = ({ address }) => {
 
   return (
     <div className="p-6">
-      <h3 className="text-xl mb-2">Dostupni mikrokredencijali</h3>
+      <h3 className="text-xl mb-2" style={{backgroundColor: "white", display:"inline-block"}}><b>Dostupni mikrokredencijali</b></h3>
       <div className="flex flex-wrap gap-4">
         {dummyCredentials.map((credential) => (
           <MicroCredentialCard

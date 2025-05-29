@@ -42,7 +42,7 @@ const DashboardEarnerSent = ({ address }) => {
       <h3 className="text-xl mb-4 font-semibold text-blue-700">Poslati zahtevi na čekanju</h3>
 
       {pendingRequests.length === 0 ? (
-        <p className="text-sm text-gray-600">Nemate zahteva koji su još uvek na čekanju.</p>
+        <p className="text-sm text-blue-700">Nemate zahteva koji su još uvek na čekanju.</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
