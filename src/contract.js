@@ -1,24 +1,6 @@
-export const CONTRACT_ADDRESS = "0x55bD224BFDE52B73ea9900Ee4b292946513212BE";
+export const CONTRACT_ADDRESS = "0xc428d1eb760d6fb936d9c8ec495dd0c98967e408";
 
-export const CONTRACT_ABI = [
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
+export const CONTRACT_ABI =[
 	{
 		"inputs": [
 			{
@@ -225,23 +207,60 @@ export const CONTRACT_ABI = [
 		"type": "event"
 	},
 	{
+		"anonymous": false,
 		"inputs": [
 			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
 				"internalType": "uint256",
 				"name": "requestId",
 				"type": "uint256"
-			}
-		],
-		"name": "issueCredentialFromRequest",
-		"outputs": [
+			},
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"indexed": true,
+				"internalType": "address",
+				"name": "earner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "tokenURI",
+				"type": "string"
 			}
 		],
-		"stateMutability": "nonpayable",
-		"type": "function"
+		"name": "CertificateIssued",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "earner",
+				"type": "address"
+			}
+		],
+		"name": "CertificateRequested",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -276,6 +295,399 @@ export const CONTRACT_ABI = [
 		"type": "event"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "Transfer",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "certificates",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "organizationId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "issuedAt",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "learningOutcomes",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "prerequisites",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "duration",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "tokenURI",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "earner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getApproved",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "getCertificate",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "organizationId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "issuedAt",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "learningOutcomes",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "prerequisites",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "duration",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "tokenURI",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "earner",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "issuer",
+						"type": "address"
+					}
+				],
+				"internalType": "struct DigitalCertificatesSBT.Certificate",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "issuer",
+				"type": "address"
+			}
+		],
+		"name": "getCertificatesByIssuer",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "getCertificatesByOwner",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			}
+		],
+		"name": "getRequest",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "earner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "organizationId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "learningOutcomes",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "prerequisites",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "duration",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "tokenURI",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isIssued",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct DigitalCertificatesSBT.CertificateRequest",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "operator",
+				"type": "address"
+			}
+		],
+		"name": "isApprovedForAll",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "requestId",
+				"type": "uint256"
+			}
+		],
+		"name": "issueCertificateFromRequest",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "ownerOf",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -285,48 +697,28 @@ export const CONTRACT_ABI = [
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "issuer",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "organizationId",
+				"type": "uint256"
 			},
 			{
 				"internalType": "string",
-				"name": "naziv",
+				"name": "name",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "institucija",
+				"name": "learningOutcomes",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "izvor",
+				"name": "prerequisites",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "datum",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "ishodi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "preduslovi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "dodatneInfo",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "trajanje",
+				"name": "duration",
 				"type": "string"
 			},
 			{
@@ -335,9 +727,76 @@ export const CONTRACT_ABI = [
 				"type": "string"
 			}
 		],
-		"name": "requestCredential",
+		"name": "requestCertificate",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "requestCounter",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "requests",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "earner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "organizationId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "learningOutcomes",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "prerequisites",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "duration",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "tokenURI",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "isIssued",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -410,538 +869,6 @@ export const CONTRACT_ABI = [
 		"type": "function"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "Transfer",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "balanceOf",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "credentials",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "naziv",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "institucija",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "izvor",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "datum",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "ishodi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "preduslovi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "dodatneInfo",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "trajanje",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "getApproved",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "getCredential",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "string",
-						"name": "naziv",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "institucija",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "izvor",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "datum",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "ishodi",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "preduslovi",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "dodatneInfo",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "trajanje",
-						"type": "string"
-					}
-				],
-				"internalType": "struct MicroCredentialNFT.Credential",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "issuer",
-				"type": "address"
-			}
-		],
-		"name": "getCredentialsByIssuer",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "getCredentialsByOwner",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "requestId",
-				"type": "uint256"
-			}
-		],
-		"name": "getRequest",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "earner",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "issuer",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "naziv",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "institucija",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "izvor",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "datum",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "ishodi",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "preduslovi",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "dodatneInfo",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "trajanje",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "tokenURI",
-						"type": "string"
-					},
-					{
-						"internalType": "bool",
-						"name": "isIssued",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct MicroCredentialNFT.CredentialRequest",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "issuer",
-				"type": "address"
-			}
-		],
-		"name": "getRequestsByIssuer",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "operator",
-				"type": "address"
-			}
-		],
-		"name": "isApprovedForAll",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "name",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "tokenId",
-				"type": "uint256"
-			}
-		],
-		"name": "ownerOf",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "requestCounter",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "requests",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "earner",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "issuer",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "naziv",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "institucija",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "izvor",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "datum",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "ishodi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "preduslovi",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "dodatneInfo",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "trajanje",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "tokenURI",
-				"type": "string"
-			},
-			{
-				"internalType": "bool",
-				"name": "isIssued",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "requestsByIssuer",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "bytes4",
@@ -1003,6 +930,42 @@ export const CONTRACT_ABI = [
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tokenId",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ];

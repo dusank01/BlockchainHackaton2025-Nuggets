@@ -1,139 +1,189 @@
-// src/components/DashboardEarner.jsx
-import { useState } from "react";
-import MicroCredentialCard from "./MicroCredentialCard";
-import StudentCredentials from "./StudentCredential";
+import { useState, useEffect } from "react";
+import { BrowserProvider, Contract } from "ethers";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../contract";
+import api from "../api";
 
-const dummyCredentials = [
-  {
-    id: 1,
-  title: "Elektronsko poslovanje",
-  institution:"Fakultet organizacionih nauka, Univerzitet u Beogradu",
-source:"Formalan",
-competencies: "Studenti primenjuju stečena teorijska i praktična znanja za razvoj sistema elektronskog poslovanja u različitim oblastima, kao i za implementaciju jednostavnih sistema elektronskog poslovanja primenom sistema za upravljanje sadržajem, sistema za upravljanje odnosima sa klijentima i softvera za razvoj elektronskih prodavnica.",
-preconditions:"Položena 4 domaća zadatka, pismeni ispit i odbranjen projekat",
-description: "Uvod u HTML, CSS i JavaScript.",
-duration:"5 godina",
-tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreibpabo4jbhsdcdkbz37ijdske54lv7ivhvpuzfozi76urwom3g6qm",
-issuer: "0x1574245569df59717dde498e6723c912cb68d613"
-  },
-  {
-    id: 2,
-    title: "Informacioni sistemi",
-    institution: "Fakultet organizacionih nauka, Univerzitet u Beogradu",
-    source: "Formalan",
-    competencies: "Studenti analiziraju i projektuju informacioni sistem korišćenjem modernih alata i metodologija, uključujući modelovanje procesa i strukture podataka.",
-    
-    preconditions: "Položeni kolokvijumi, prisustvo na vežbama, domaći zadatak",
-    description: "Teorijski i praktični uvod u koncept informacionih sistema.",
-    duration: "1 semestar",
-    
-tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreifwdkpy3dubmts6zknfl3eqv3524e5hdwcm7qmmlooxdhkux2xfeq",
-    issuer: "0x1574245569df59717dde498e6723c912cb68d613"
-  },
-  {
-    id: 3,
-    title: "Računarske mreže",
-    institution: "Fakultet organizacionih nauka, Univerzitet u Beogradu",
-    source: "Formalan",
-    competencies: "Studenti razumeju arhitekturu mreža, TCP/IP model, IP adresiranje i primenjuju osnovne principe mrežnog inženjeringa.",
-    preconditions: "Položen test iz teorije, realizovan praktični projekat",
-    description: "Uvod u mrežne protokole i računarske komunikacije.",
-    duration: "1 godina",
-    
-tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreicrjmyohw3fx7tucvxsy3jublq7sn2clo3qr5orl2hle26nimymeu",
-    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
-  },
-  {
-    id: 4,
-    title: "Programiranje 1",
-    institution: "Fakultet organizacionih nauka, Univerzitet u Beogradu",
-    source: "Formalan",
-    competencies: "Studenti implementiraju osnovne algoritme i strukture podataka koristeći programski jezik C, kao i razvijaju male konzolne aplikacije.",
-    
-    preconditions: "Položen pismeni i usmeni deo ispita, redovno prisustvo",
-    description: "Osnovni kurs programiranja u C jeziku sa praktičnim primerima.",
-    duration: "1 semestar",
-    
-tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreifzs7g7aml6t5kuzor6npejfa4t7svnubigdrnym4kdklmzd67afa",
-    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
-  },
-  {
-    id: 5,
-    title: "Osnove baza podataka",
-    institution: "Fakultet organizacionih nauka, Univerzitet u Beogradu",
-    source: "Formalan",
-    competencies: "Studenti projektuju, implementiraju i upravljaju relacionim bazama podataka koristeći SQL jezik i alate poput MySQL i PostgreSQL.", 
-    preconditions: "Uspešno realizovan projekat i položen teorijski deo",
-    description: "Teorijska i praktična osnova za rad sa bazama podataka.",
-    duration: "1 semestar",
-    
-tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreihd6se5jdtxqlx47xvmwfmtxiq75mock2uwzqopvewsarge5c72gy",
-    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
-  },
-  {
-    id: 6,
-    title: "Softversko inženjerstvo",
-    institution: "Fakultet organizacionih nauka, Univerzitet u Beogradu",
-    source: "Formalan",
-    competencies: "Studenti primenjuju principe životnog ciklusa razvoja softvera, koriste alate za verzionisanje, testiranje i modelovanje sistema.",
-    preconditions: "Domaći zadaci, timski projekat, položen završni ispit",
-    description: "Pregled metodologija razvoja softvera i uloga u timu.",
-    duration: "2 semestra",
-    
-tokenURI:"https://gateway.pinata.cloud/ipfs/bafkreigbzqzjdheoiu5od3mpus6gzv2nuhuaeqp5kzv6hj72iuxgo7cjbi",
-    issuer: "0x0E941f1E0D62918B4702b5F03f55955908Dc6892"
-  }
-]
-;
-
-const DashboardEarnerAvailable = ({ address }) => {
+const DashboardEarnerAvailable = ({ address, userId }) => {
+  const [certificates, setCertificates] = useState([]);
   const [requests, setRequests] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCertificate, setSelectedCertificate] = useState(null);
 
-  const handleRequest = (credentialId) => {
-    if (requests.includes(credentialId)) {
-      setModalMessage("⚠ Već ste poslali zahtev za ovaj mikrokredencijal.");
-      setIsLoading(false);
+  // 🔹 Učitaj sve sertifikate iz baze
+  useEffect(() => {
+    api
+      .get("/certificates")
+      .then((res) => {
+        console.log("📄 Sertifikati:", res.data);
+        setCertificates(res.data);
+      })
+      .catch((err) => console.error("❌ Greška pri učitavanju sertifikata:", err));
+  }, []);
+
+  // ✅ Glavna funkcija — slanje zahteva
+  const handleRequest = async (certificateId) => {
+    if (requests.includes(certificateId)) {
+      setModalMessage("⚠ Već ste poslali zahtev za ovaj sertifikat.");
       setShowModal(true);
       setTimeout(() => setShowModal(false), 2000);
       return;
     }
 
-    setRequests([...requests, credentialId]);
     setModalMessage("🔄 Slanje zahteva...");
     setIsLoading(true);
     setShowModal(true);
 
-   
-    setTimeout(() => {
-      setModalMessage("✅ Zahtev uspešno poslat!");
+    try {
+      // === 1️⃣ Pronađi sertifikat
+      const cert = certificates.find((c) => c.id === certificateId);
+      if (!cert) throw new Error("Sertifikat nije pronađen u lokalnoj listi.");
+
+      // === 2️⃣ Uveri se da tokenURI postoji
+      const tokenURI = cert.tokenURI || cert.token_uri || "";
+      if (!tokenURI) throw new Error("Sertifikat nema definisan tokenURI!");
+
+      // === 3️⃣ Poveži se sa MetaMask
+      if (!window.ethereum) throw new Error("MetaMask nije pronađen.");
+      const provider = new BrowserProvider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = await provider.getSigner();
+      const contract = new Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+      // === 4️⃣ Pošalji zahtev na blockchain
+      console.log("📤 Slanje requestCertificate sa tokenURI:", tokenURI);
+      const tx = await contract.requestCertificate(
+        parseInt(cert.organization?.id || 1),
+        cert.name,
+        cert.learning_outcomes || "",
+        cert.prerequisites || "",
+        cert.duration || "",
+        tokenURI
+      );
+
+      console.log("⏳ Tx hash:", tx.hash);
+      const receipt = await tx.wait();
+      console.log("✅ Transakcija potvrđena:", receipt);
+
+      // === 5️⃣ Dohvati novi blockchain ID
+      const total = await contract.requestCounter();
+      const blockchainRequestId = Number(total) - 1;
+      console.log("🆔 Novi blockchainRequestId:", blockchainRequestId);
+
+      // === 6️⃣ Kreiraj zapis u bazi (sa blockchain ID i tokenURI)
+      const backendRes = await api.post("/requests", {
+        certificate_id: certificateId,
+        user_id: userId,
+        blockchain_request_id: blockchainRequestId,
+        token_uri: tokenURI, // 🔥 Dodato ovde
+      });
+      console.log("✅ Backend zahtev sačuvan:", backendRes.data);
+
+      setRequests([...requests, certificateId]);
+      setModalMessage("✅ Zahtev uspešno poslat (backend + blockchain)!");
+
+    } catch (error) {
+      console.error("❌ Greška prilikom slanja:", error);
+      setModalMessage("⚠️ " + (error.reason || error.message));
+    } finally {
       setIsLoading(false);
-      setTimeout(() => setShowModal(false), 2000);
-    }, 2000);
+      setTimeout(() => setShowModal(false), 2500);
+    }
   };
+
+  // 🔹 Modal i UI deo
+  const openDetailsModal = (cert) => setSelectedCertificate(cert);
+  const closeDetailsModal = () => setSelectedCertificate(null);
 
   return (
     <div className="p-6">
-      <h3 className="text-xl mb-2" style={{backgroundColor: "white", display:"inline-block"}}><b>Dostupni mikrokredencijali</b></h3>
+      <h3 className="text-xl mb-4 bg-white inline-block font-bold">
+        Dostupni sertifikati
+      </h3>
+
       <div className="flex flex-wrap gap-4">
-        {dummyCredentials.map((credential) => (
-          <MicroCredentialCard
-            key={credential.id}
-            credential={credential}
-            onRequest={handleRequest}
-          />
-        ))}
+        {certificates.length > 0 ? (
+          certificates.map((cert) => (
+            <div
+              key={cert.id}
+              className="bg-white shadow-md rounded-xl p-4 w-72 border border-gray-200"
+            >
+              <h4 className="text-lg font-semibold text-gray-800 mb-2">
+                {cert.name}
+              </h4>
+              <p className="text-gray-600 text-sm mb-1">
+                <strong>Institucija:</strong>{" "}
+                {cert.organization?.name || "Nepoznato"}
+              </p>
+              <p className="text-gray-600 text-sm mb-3">
+                <strong>Trajanje:</strong> {cert.duration || "N/A"}
+              </p>
+
+              <button
+                className="text-blue-600 text-sm underline mb-3 inline-block"
+                onClick={() => openDetailsModal(cert)}
+              >
+                Prikaži više
+              </button>
+
+              <button
+                onClick={() => handleRequest(cert.id)}
+                disabled={requests.includes(cert.id)}
+                className={`w-full py-2 rounded-lg text-white ${
+                  requests.includes(cert.id)
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {requests.includes(cert.id)
+                  ? "Zahtev poslat"
+                  : "Pošalji zahtev"}
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-700">Nema dostupnih sertifikata.</p>
+        )}
       </div>
 
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
-          <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center transform transition duration-300">
+      {/* Modal za status */}
+      {showModal && !selectedCertificate && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-30">
+          <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
             <p className="text-lg font-medium mb-4">{modalMessage}</p>
             {isLoading && (
               <div className="h-6 w-6 bg-blue-500 rounded-full animate-pulse mx-auto" />
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal sa detaljima sertifikata */}
+      {selectedCertificate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-xl shadow-lg w-[400px] p-6 relative">
+            <h3 className="text-lg font-semibold mb-3">
+              {selectedCertificate.name}
+            </h3>
+            <p className="text-gray-700 text-sm mb-2">
+              <strong>Ishodi učenja:</strong>
+              <br />
+              {selectedCertificate.learning_outcomes ||
+                "Nema definisanih ishoda učenja."}
+            </p>
+            <p className="text-gray-700 text-sm mb-4">
+              <strong>Preduslovi:</strong>
+              <br />
+              {selectedCertificate.prerequisites ||
+                "Nema navedenih preduslova."}
+            </p>
+            <button
+              onClick={closeDetailsModal}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+            >
+              ✖
+            </button>
           </div>
         </div>
       )}
